@@ -1,16 +1,16 @@
 
-    const express = require('express');
-    const {conn} = require('./DB_connection');
-    const server = express();
-    const PORT = 3001;
-    const morgan = require('morgan');
-    const router = require('./routes/index');
-    const {listenToPushNotifications} = require('./notifications/notificationPush');
-    server.use(express.json());
+const express = require('express');
+const { conn } = require('./DB_connection');
+const server = express();
+const PORT = 3001;
+const morgan = require('morgan');
+const router = require('./routes/index');
+const { listenToPushNotifications } = require('./notifications/notificationPush');
+server.use(express.json());
 
-    server.use(morgan('dev'));
+server.use(morgan('dev'));
 
-    
+
 server.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Credentials', 'true');
@@ -29,7 +29,7 @@ server.use((req, res, next) => {
 
 server.use('/doc-approved', router);
 // conn.sync({ force: true }).then(() => {
-conn.sync({ force: true }).then(() => {
+conn.sync({ force: false }).then(() => {
 
 
     server.listen(PORT, () => {
@@ -39,7 +39,7 @@ conn.sync({ force: true }).then(() => {
     });
     listenToPushNotifications();
 
-    
+
 
     // createUser();
 
