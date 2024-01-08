@@ -16,6 +16,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
     console.log(user.dataValues.name);
     const MAX_RETRIES = 3;
 
+    console.log(user.dataValues.token);
+
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
         try {
             const response = await axiosInstance.post('https://165.227.197.236:1201/ADInterface/services/rest/model_adservice/query_data', {
@@ -96,7 +98,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 const listenToPushNotifications = async () => {
     try {
         const users = await User.findAll({
-            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'documents', 'status'],
+            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'url', 'token', 'documents', 'status'],
             where: {
                 status: true
             }

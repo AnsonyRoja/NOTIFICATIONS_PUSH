@@ -50,6 +50,11 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        token: {
+            type: DataTypes.STRING,
+            allowNull: true,
+
+        },
         documents: {
             type: DataTypes.JSONB,
             allowNull: true

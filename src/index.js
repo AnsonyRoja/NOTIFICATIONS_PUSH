@@ -29,7 +29,7 @@ server.use((req, res, next) => {
 
 server.use('/doc-approved', router);
 // conn.sync({ force: true }).then(() => {
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
 
 
     server.listen(PORT, () => {
