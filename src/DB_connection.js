@@ -21,12 +21,12 @@ const sequelize = new Sequelize(
 );
 
 
-TokenModel(sequelize);
+// TokenModel(sequelize);
 UserModel(sequelize);
 
 const { Token, User, Document } = sequelize.models;
-User.hasMany(Token, { foreignKey: 'userId' });
-Token.belongsTo(User, { foreignKey: 'userId' });
+// User.hasMany(Token, { foreignKey: 'userId' });
+// Token.belongsTo(User, { foreignKey: 'userId' });
 
 // EJERCICIO 05
 // Debajo de este comentario puedes ejecutar la función de los modelos.
