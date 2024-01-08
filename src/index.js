@@ -32,7 +32,7 @@ server.use('/doc-approved', router);
 conn.sync({ force: true }).then(() => {
 
 
-    server.listen(PORT, () => {
+    server.listen(PORT,() => {
 
         console.log(`Server raised in port: ${PORT}`);
 

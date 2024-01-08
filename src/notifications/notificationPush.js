@@ -8,19 +8,19 @@ const agent = new https.Agent({
     rejectUnauthorized: false
 });
 
-let previousDocuments = [];
-
+ 
 const axiosInstance = axios.create({ httpsAgent: agent });
 
 const checkAndNotifyDocumentsForUser = async (user) => {
     console.log(user.dataValues.name);
     const MAX_RETRIES = 3;
-
+    const token = user.dataValues.token;
     console.log(user.dataValues.token);
-
+    console.log(user.dataValues.url);
+        
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
         try {
-            const response = await axiosInstance.post('https://165.227.197.236:1201/ADInterface/services/rest/model_adservice/query_data', {
+            const response = await axiosInstance.post(`${user.dataValues.url}ADInterface/services/rest/model_adservice/query_data`, {
 
 
                 "ModelCRUDRequest": {
@@ -52,6 +52,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 { where: { id: user.id, documents: null } }
             );
 
+
+
             const usersWithDocuments = await User.findOne({
                 attributes: ['id', 'documents'],
                 where: {
@@ -69,7 +71,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
-                    const docExistente = previousDocuments[index];
+                    const docExistente = usersWithDocuments?.documents[index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
 
@@ -78,7 +80,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     const numDocument = currentDocuments[nuevoIndice].field[2].val;
                     const operationType = currentDocuments[nuevoIndice].field[15].val;
                     console.log('Tipo de Operacion:', operationType);
-                    sendPushNotification(numDocument, operationType);
+                    sendPushNotification(numDocument, operationType, token);
 
                     await User.update(
                         { documents: currentDocuments },
@@ -87,7 +89,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 }
             }
 
-            previousDocuments = currentDocuments;
             break; // Sale del bucle de reintento si la solicitud es exitosa
         } catch (error) {
             console.error(`Error en la solicitud para ${user.dataValues.name} (Intento ${retry + 1}):`, error.message);
