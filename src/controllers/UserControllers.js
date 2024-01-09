@@ -1,11 +1,6 @@
 const axios = require('axios');
 const { User } = require('../DB_connection');
 const admin = require('firebase-admin');  // Asegúrate de importar Firebase Admin SDK
-const serviceAccount = require('../notifications/notificationPush.json'); // Reemplaza con la ubicación de tu archivo de clave privada
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
 
 
 const createUser = async (req, res) => {
