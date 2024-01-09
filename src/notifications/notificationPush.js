@@ -106,7 +106,7 @@ const listenToPushNotifications = async () => {
         });
 
         if (users.length === 0) {
-            console.log('No hay usuarios activos.');
+            // console.log('No hay usuarios activos.');
             return;
         }
 
