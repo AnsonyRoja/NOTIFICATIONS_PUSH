@@ -26,21 +26,26 @@ const sendPushNotification = async (numDocument, operationType, tokens) => {
       }
     }
 
-    // Envía notificaciones solo a los tokens válidos
-    for (const token of validTokens) {
-      const message = {
-        token: token,
-        notification: {
-          title: operationType,
-          body: `Documento: ${numDocument}`,
-        },
-        data: {
-          comida: numDocument,
-        },
-      };
+    // Comprueba si hay al menos un token válido antes de intentar enviar notificaciones
+    if (validTokens.length > 0) {
+      // Envía notificaciones solo a los tokens válidos
+      for (const token of validTokens) {
+        const message = {
+          token: token,
+          notification: {
+            title: operationType,
+            body: `Documento: ${numDocument}`,
+          },
+          data: {
+            comida: numDocument,
+          },
+        };
 
-      await admin.messaging().send(message);
-      console.log('Notificación push enviada con éxito para el token:', token);
+        await admin.messaging().send(message);
+        console.log('Notificación push enviada con éxito para el token:', token);
+      }
+    } else {
+      console.error('No hay tokens válidos para enviar notificaciones.');
     }
   } catch (error) {
     console.error('Error al enviar notificación push:', error);
