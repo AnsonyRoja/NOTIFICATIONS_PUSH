@@ -8,7 +8,7 @@ const agent = new https.Agent({
     rejectUnauthorized: false
 });
 
- 
+
 const axiosInstance = axios.create({ httpsAgent: agent });
 
 const checkAndNotifyDocumentsForUser = async (user) => {
@@ -17,7 +17,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
     const token = user.dataValues.token;
     console.log(user.dataValues.token);
     console.log(user.dataValues.url);
-        
+
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
         try {
             const response = await axiosInstance.post(`${user.dataValues.url}ADInterface/services/rest/model_adservice/query_data`, {
@@ -104,6 +104,11 @@ const listenToPushNotifications = async () => {
                 status: true
             }
         });
+
+        if (users.length === 0) {
+            console.log('No hay usuarios activos.');
+            return;
+        }
 
         await User.update(
             { status: true },
