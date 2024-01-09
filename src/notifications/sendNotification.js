@@ -23,6 +23,8 @@ const sendPushNotification = async (numDocument, operationType, tokens) => {
           data: {
             comida: numDocument,
           },
+          priority: 'high',  // Establecer la prioridad como "high" para mensajes de alta prioridad
+
         };
 
         await admin.messaging().send(message);
