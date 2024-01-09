@@ -1,5 +1,3 @@
-
-
 const admin = require('firebase-admin');
 const serviceAccount = require('./notificationPush.json'); // Reemplaza con la ubicación de tu archivo de clave privada
 
@@ -7,36 +5,30 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// const deviceId = 'd9EZiaErTn6TdjVrV4VjK9:APA91bGW3EfCnbI6wATKJlSPHc-YDjDocmVeZTXqRYmfbYAF9Q5WiFUOydAuVMfFMIPRaq0_TqmgvSMwMAUnIh7m1ZJEFs3erCLYQGqy1ENYY6ADum9DXVXm0Bsa_P4yB6nfih9LUYSj'; // Reemplaza con el ID del dispositivo
-
-const data = { comida: 'frito', key2: 'value2', imageUrl: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png' };
-
-
-const sendPushNotification = async (numDocument, operationType,token) => {
+const sendPushNotification = async (numDocument, operationType, tokens) => {
   try {
-    for(const toke of token){
-    const message = {
-      token: toke,
-      notification: {
-        title: operationType,
-        body: `Documento: ${numDocument}`,
+    for (const token of tokens) {
+      const message = {
+        token: token,
+        notification: {
+          title: operationType,
+          body: `Documento: ${numDocument}`,
+        },
+        data: {
+          comida: numDocument,
+        },
+      };
 
-      },
-      data: {
-        comida: numDocument,
-      },
-
-    };
-
-    const response = await admin.messaging().send(message);
- 
-    console.log('Notificación push enviada con éxito:', response);
-  }
+      await admin.messaging().send(message);
+      console.log('Notificación push enviada con éxito para el token:', token);
+    }
   } catch (error) {
-    console.error('Error al enviar la notificación push:', error);
+    console.error('Error al enviar notificación push:', error);
+
+    // Aquí puedes decidir cómo manejar el error, ya sea registrándolo, ignorándolo o tomando alguna otra acción necesaria.
+    // Puedes agregar lógica adicional según tus requerimientos.
   }
 };
 
 // Uso de la función
-
-module.exports = sendPushNotification
+module.exports = sendPushNotification;
