@@ -1,34 +1,44 @@
-
 const axios = require('axios');
+const admin = require('firebase-admin');  // Asegúrate de importar Firebase Admin SDK
 const { User } = require('../DB_connection');
 
-
 const createUser = async (req, res) => {
-
     const { id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, token, documents, status } = req.body;
 
-    console.log(id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url,token, documents, status);
+    console.log(id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, token, documents, status);
+
     try {
         const existingUser = await User.findOne({
             where: {
-                email: email
+                id: id
             }
         });
 
         // Si el usuario ya existe, responder con un error
         if (existingUser) {
-            // Verifica si el nuevo token es diferente del token existente
-            // if (existingUser.token !== token) {
-            //     existingUser = await existingUser.update({ token: token }); // Actualiza el token
-            // }
-
             const existingTokens = existingUser.token || [];
 
-            // Verifica si el nuevo token no está en el arreglo existente
-          if (!existingTokens.includes(token)) {
-                // Actualiza el arreglo de tokens en la base de datos
-                await existingUser.update({ token: [...existingTokens, token] });
-            }
+            // Filtra los tokens válidos antes de actualizar la base de datos
+            const validTokens = await Promise.all(existingTokens.map(async (existingToken) => {
+                try {
+                    // Intenta enviar un mensaje de prueba para verificar la validez del token
+                    await admin.messaging().send({
+                        token: existingToken,
+                        data: { test: 'test' },
+                    });
+
+                    // Si no se lanza ninguna excepción, el token es válido
+                    return existingToken;
+                } catch (error) {
+                    // Si se lanza una excepción, el token no es válido y no se incluirá en la lista de tokens válidos
+                    console.error(`Token inválido: ${existingToken}, error: ${error.message}`);
+                    return null;
+                }
+            }));
+
+            // Actualiza la base de datos con los tokens válidos
+            await existingUser.update({ token: validTokens.filter(token => token !== null) });
+
             return res.status(200).json({ message: 'Email already exists', user: existingUser });
         }
 
@@ -51,14 +61,9 @@ const createUser = async (req, res) => {
 
         res.json(user);
     } catch (error) {
-
         res.status(500).json({ message: 'Error creating user ' + error });
-
     }
-
-
 }
-
 
 module.exports = {
     createUser
