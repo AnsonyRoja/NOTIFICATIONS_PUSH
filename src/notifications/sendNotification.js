@@ -7,7 +7,27 @@ admin.initializeApp({
 
 const sendPushNotification = async (numDocument, operationType, tokens) => {
   try {
+    // Filtra los tokens válidos para evitar el envío de notificaciones a tokens no registrados
+    const validTokens = [];
+
     for (const token of tokens) {
+      try {
+        // Intenta enviar un mensaje de prueba para verificar la validez del token
+        await admin.messaging().send({
+          token: token,
+          data: { test: 'test' },
+        });
+
+        // Si no se lanzó ninguna excepción, el token es válido
+        validTokens.push(token);
+      } catch (error) {
+        // Si se lanza una excepción, el token no es válido y se registra el error
+        console.error(`Token inválido: ${token}, error: ${error.message}`);
+      }
+    }
+
+    // Envía notificaciones solo a los tokens válidos
+    for (const token of validTokens) {
       const message = {
         token: token,
         notification: {
