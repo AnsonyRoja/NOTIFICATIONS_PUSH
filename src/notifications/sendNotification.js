@@ -13,7 +13,7 @@ const sendPushNotification = async (numDocument, operationType, tokens) => {
     // Comprueba si hay al menos un token válido antes de intentar enviar notificaciones
 
       // Envía notificaciones solo a los tokens válidos
-      for (const token of validTokens) {
+      for (const token of tokens) {
         const message = {
           token: token,
           notification: {
