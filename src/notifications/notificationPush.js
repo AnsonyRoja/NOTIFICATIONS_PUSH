@@ -127,7 +127,7 @@ const listenToPushNotifications = async () => {
         console.error('Error al obtener documentos:', error);
     } finally {
         // Llamada recursiva después de 5 segundos
-        setTimeout(listenToPushNotifications, 15000);
+        setTimeout(listenToPushNotifications, 5000);
     }
 };
 
