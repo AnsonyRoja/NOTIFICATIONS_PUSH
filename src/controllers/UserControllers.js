@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
 
     const { id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, token, documents, status } = req.body;
 
-    console.log(id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, documents, status);
+    console.log(id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url,token, documents, status);
     try {
         const existingUser = await User.findOne({
             where: {
@@ -22,6 +22,13 @@ const createUser = async (req, res) => {
             //     existingUser = await existingUser.update({ token: token }); // Actualiza el token
             // }
 
+            const existingTokens = existingUser.token || [];
+
+            // Verifica si el nuevo token no está en el arreglo existente
+            if (!existingTokens.includes(token)) {
+                // Actualiza el arreglo de tokens en la base de datos
+                await existingUser.update({ token: [...existingTokens, token] });
+            }
             return res.status(200).json({ message: 'Email already exists', user: existingUser });
         }
 
@@ -45,7 +52,7 @@ const createUser = async (req, res) => {
         res.json(user);
     } catch (error) {
 
-        res.status(500).json({ message: 'Error creating user' });
+        res.status(500).json({ message: 'Error creating user ' + error });
 
     }
 
