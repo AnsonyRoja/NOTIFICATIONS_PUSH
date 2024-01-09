@@ -54,7 +54,7 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
         documents: {
-            type: DataTypes.JSONB,
+            type: DataTypes.JSON,
             allowNull: true
         },
         status: {
