@@ -46,14 +46,13 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
             });
-            
-               if (user.dataValues.documents === null){
 
-                    await User.update(
-                        { documents: response?.data.WindowTabData.DataSet.DataRow },
-                        { where: { id: user.id, documents: null } }
-                    );
-                }
+
+            await User.update(
+                { documents: response?.data.WindowTabData.DataSet.DataRow },
+                { where: { id: user.id, documents: null } }
+            );
+
 
 
 
@@ -69,8 +68,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
-           if(usersWithDocuments === null    ) return;
-           if(usersWithDocuments.documents === null) return;
+            if (usersWithDocuments === null) return;
+            if (usersWithDocuments.documents === null) return;
 
 
             if (currentDocuments.length > usersWithDocuments.documents.length) {
