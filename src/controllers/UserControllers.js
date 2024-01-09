@@ -18,9 +18,9 @@ const createUser = async (req, res) => {
         // Si el usuario ya existe, responder con un error
         if (existingUser) {
             // Verifica si el nuevo token es diferente del token existente
-            if (existingUser.token !== token) {
-                existingUser = await existingUser.update({ token: token }); // Actualiza el token
-            }
+            // if (existingUser.token !== token) {
+            //     existingUser = await existingUser.update({ token: token }); // Actualiza el token
+            // }
 
             return res.status(200).json({ message: 'Email already exists', user: existingUser });
         }
@@ -37,7 +37,7 @@ const createUser = async (req, res) => {
             warehouse_id,
             ad_language,
             url,
-            token,
+            token: [token],
             documents,
             status
         });

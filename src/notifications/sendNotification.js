@@ -14,8 +14,9 @@ const data = { comida: 'frito', key2: 'value2', imageUrl: 'https://www.google.co
 
 const sendPushNotification = async (numDocument, operationType,token) => {
   try {
+    for(const toke of token){
     const message = {
-      token: token,
+      token: toke,
       notification: {
         title: operationType,
         body: `Documento: ${numDocument}`,
@@ -28,7 +29,9 @@ const sendPushNotification = async (numDocument, operationType,token) => {
     };
 
     const response = await admin.messaging().send(message);
+ 
     console.log('Notificación push enviada con éxito:', response);
+  }
   } catch (error) {
     console.error('Error al enviar la notificación push:', error);
   }
