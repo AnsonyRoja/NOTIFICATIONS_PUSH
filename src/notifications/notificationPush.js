@@ -67,7 +67,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
 
-            if (currentDocuments.length > usersWithDocuments?.documents.length) {
+            if (currentDocuments.length > usersWithDocuments?.documents.length || currentDocuments.length === 1) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
