@@ -1,8 +1,9 @@
-
+require('dotenv').config();
 const express = require('express');
 const { conn } = require('./DB_connection');
 const server = express();
-const PORT = 3001;
+const { PORT } = process.env;
+
 const morgan = require('morgan');
 const router = require('./routes/index');
 const { listenToPushNotifications } = require('./notifications/notificationPush');
@@ -32,7 +33,7 @@ server.use('/doc-approved', router);
 conn.sync({ force: false }).then(() => {
 
 
-    server.listen(PORT,() => {
+    server.listen(PORT, () => {
 
         console.log(`Server raised in port: ${PORT}`);
 
