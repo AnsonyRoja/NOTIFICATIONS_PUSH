@@ -17,6 +17,10 @@ const createUser = async (req, res) => {
         // Si el usuario ya existe, responder con un error
         if (existingUser) {
             const existingTokens = existingUser.token || [];
+
+
+            if (!existingTokens.includes(token)) {
+
             const updatedTokens = [...existingTokens, token];
 
             // Filtra los tokens válidos antes de actualizar la base de datos
@@ -43,6 +47,9 @@ const createUser = async (req, res) => {
             await existingUser.update({ token: validTokens.filter(token => token !== null) });
 
             return res.status(200).json({ message: 'Email already exists', user: existingUser });
+            }else{
+                return res.status(200).json({ message: 'token already exists'});
+            }
         }
 
         // Si el correo electrónico no existe, crea un nuevo usuario
