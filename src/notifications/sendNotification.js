@@ -35,7 +35,7 @@ const sendPushNotification = async (numDocument, operationType, tokens) => {
             body: `Documento: ${numDocument}`,
           },
           data: {
-            comida: numDocument,
+            numDoc: numDocument,
           },
         };
 
