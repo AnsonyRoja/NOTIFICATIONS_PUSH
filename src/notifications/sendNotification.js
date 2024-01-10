@@ -8,28 +8,28 @@ admin.initializeApp({
 const sendPushNotification = async (numDocument, operationType, tokens) => {
   try {
     // Filtra los tokens válidos para evitar el envío de notificaciones a tokens no registrados
- 
+
 
     // Comprueba si hay al menos un token válido antes de intentar enviar notificaciones
 
-      // Envía notificaciones solo a los tokens válidos
-      for (const token of tokens) {
-        const message = {
-          token: token,
-          notification: {
-            title: operationType,
-            body: `Documento: ${numDocument}`,
-          },
-          data: {
-            comida: numDocument,
-          },
+    // Envía notificaciones solo a los tokens válidos
+    for (const token of tokens) {
+      const message = {
+        token: token,
+        notification: {
+          title: operationType,
+          body: `Documento: ${numDocument}`,
+        },
+        data: {
+          comida: numDocument,
+        },
 
-        };
+      };
 
-        await admin.messaging().send(message);
-        console.log('Notificación push enviada con éxito para el token:', token);
-      }
-  
+      console.log('Notificación push enviada con éxito para el token:', token);
+      await admin.messaging().send(message);
+    }
+
   } catch (error) {
     console.error('Error al enviar notificación push:', error);
 

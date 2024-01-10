@@ -15,8 +15,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
     console.log(user.dataValues.name);
     const MAX_RETRIES = 3;
     const token = user.dataValues.token;
-    console.log(user.dataValues.token);
-    console.log(user.dataValues.url);
+    // console.log(user.dataValues.token);
+    // console.log(user.dataValues.url);
 
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
         try {
@@ -68,9 +68,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
-            if (usersWithDocuments === null) return;
-            if (usersWithDocuments.documents === null) return;
 
+            console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, usersWithDocuments.documents.length);
 
             if (currentDocuments.length > usersWithDocuments.documents.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
@@ -92,6 +91,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                         { where: { id: user.id, status: true } }
                     );
                 }
+            } else {
+                console.log("no hay cambios en los documentos");
             }
 
             break; // Sale del bucle de reintento si la solicitud es exitosa
