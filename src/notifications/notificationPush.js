@@ -15,7 +15,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
     console.log(user.dataValues.name);
     const MAX_RETRIES = 3;
     const token = user.dataValues.token;
-    // console.log(user.dataValues.token);
+    console.log(user.dataValues.token);
     // console.log(user.dataValues.url);
 
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
