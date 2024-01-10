@@ -75,6 +75,46 @@ const createUser = async (req, res) => {
     }
 }
 
+
+
+
+const logoutUser = async (req, res) => {
+    const { userId, token } = req.body;
+
+    try {
+        const existingUser = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        if (existingUser) {
+            const existingTokens = existingUser.token || [];
+            
+            // Filtra el token a eliminar
+            const updatedTokens = existingTokens.filter(existingToken => existingToken !== token);
+
+            // Actualiza la base de datos con los tokens restantes
+            await existingUser.update({ token: updatedTokens });
+
+            return res.status(200).json({ message: 'Logout successful' });
+        } else {
+            return res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error logging out user:', error);
+        res.status(500).json({ message: 'Error logging out user' });
+    }
+};
+
+
+
+
+
+
+
+
 module.exports = {
-    createUser
+    createUser,
+    logoutUser
 }
