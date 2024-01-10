@@ -17,10 +17,13 @@ const createUser = async (req, res) => {
         // Si el usuario ya existe, responder con un error
         if (existingUser) {
             const existingTokens = existingUser.token || [];
+            const updatedTokens = [...existingTokens, ...token];
 
             // Filtra los tokens válidos antes de actualizar la base de datos
-            const validTokens = await Promise.all(existingTokens.map(async (existingToken) => {
+            const validTokens = await Promise.all(updatedTokens.map(async (existingToken) => {
                 try {
+
+
                     // Intenta enviar un mensaje de prueba para verificar la validez del token
                     await admin.messaging().send({
                         token: existingToken,
