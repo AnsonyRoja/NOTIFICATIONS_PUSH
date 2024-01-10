@@ -88,6 +88,11 @@ const logoutUser = async (req, res) => {
             }
         });
 
+        console.log(existingUser);
+
+        console.log("user id", userId);
+        console.log("token", token);
+
         if (existingUser) {
             const existingTokens = existingUser.token || [];
             
