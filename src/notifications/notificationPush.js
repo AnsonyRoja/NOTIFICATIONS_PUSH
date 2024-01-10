@@ -71,7 +71,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, usersWithDocuments.documents.length);
 
-            if (currentDocuments.length > usersWithDocuments.documents.length || currentDocuments.length === 1) {
+            if (currentDocuments.length > usersWithDocuments.documents.length || currentDocuments.length === 1 || currentDocuments.length < usersWithDocuments.documents.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
