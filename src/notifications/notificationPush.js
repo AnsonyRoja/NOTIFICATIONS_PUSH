@@ -51,11 +51,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
-                if (dataRow === undefined || dataRow.field === undefined) {
-                    // Manejar el caso en el que DataRow o field son undefined
-                    console.error(`DataRow o field son undefined para ${user.dataValues.name}`);
-                    return;
-                }
                 
                 const fieldArray = dataRow.field;
 
