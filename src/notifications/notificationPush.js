@@ -57,8 +57,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 if(fieldArray?.length === 18 && flag === false){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
-                    const numDocument = documentoUnico.field[2].val;
-                    const operationType = documentoUnico.field[15].val;
+                    const numDocument = documentoUnico?.field[2].val;
+                    const operationType = documentoUnico?.field[15].val;
 
                     sendPushNotification(numDocument, operationType, token);
 
