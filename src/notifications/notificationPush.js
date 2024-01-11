@@ -14,7 +14,6 @@ const axiosInstance = axios.create({ httpsAgent: agent });
 const checkAndNotifyDocumentsForUser = async (user) => {
     console.log(user.dataValues.name);
     const MAX_RETRIES = 3;
-    let flag = false;
     const token = user.dataValues.token;
     console.log(user.dataValues.token);
     // console.log(user.dataValues.url);
@@ -48,16 +47,18 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             });
 
-          
-                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length);
-                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && flag === false){    
+                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
+                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && user.documents){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico.field[2].val;
                     const operationType = documentoUnico.field[15].val;
 
                     sendPushNotification(numDocument, operationType, token);
-                flag = true;
+                    await User.update(
+                        { documents: response?.data.WindowTabData.DataSet.DataRow.field},
+                        { where: { id: user.id, status: true } }
+                    );
                     
                 }
 
