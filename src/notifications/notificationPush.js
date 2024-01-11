@@ -48,6 +48,10 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             });
 
                 console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
+
+                if(response?.data.WindowTabData.DataSet.DataRow === undefined){
+                    
+                
                 if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && user.documents === undefined){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
@@ -61,6 +65,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     );
                     
                 }
+                
+            }
 
             if(user.dataValues.documents === undefined){
                 await User.update(
