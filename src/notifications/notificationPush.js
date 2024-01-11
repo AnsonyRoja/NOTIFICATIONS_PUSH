@@ -52,9 +52,9 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
                 
-                const fieldArray = dataRow.field;
+                const fieldArray = dataRow?.field;
 
-                if(fieldArray.length === 18 && flag === false){    
+                if(fieldArray?.length === 18 && flag === false){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico.field[2].val;
