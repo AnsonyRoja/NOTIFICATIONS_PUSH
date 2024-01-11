@@ -49,6 +49,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
 
+                console.log('esto es notificacion',user.dataValues.notificacion)
+
                 const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
                 
@@ -141,7 +143,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 const listenToPushNotifications = async () => {
     try {
         const users = await User.findAll({
-            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'url', 'token', 'documents', 'status'],
+            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'url', 'token', 'documents', 'status','notificacion'],
             where: {
                 status: true
             }

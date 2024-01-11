@@ -3,6 +3,7 @@ const admin = require('firebase-admin');  // Asegúrate de importar Firebase Adm
 const { User } = require('../DB_connection');
 
 const createUser = async (req, res) => {
+
     const { id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, token, documents, status } = req.body;
 
     console.log(id, name, password, email, client_id, org_id, approle_id, warehouse_id, ad_language, url, token, documents, status);
@@ -66,7 +67,8 @@ const createUser = async (req, res) => {
             url,
             token: [token],
             documents,
-            status
+            status,
+            notificacion:false
         });
 
         res.json(user);

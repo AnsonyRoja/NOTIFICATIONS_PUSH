@@ -61,6 +61,10 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
+        notificacion: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true
+        },
 
     }, {
         timestamps: false
