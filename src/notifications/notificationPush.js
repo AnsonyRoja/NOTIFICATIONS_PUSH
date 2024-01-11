@@ -46,7 +46,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
             });
-                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow);
+                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field);
                 // if(response?.data.WindowTabData.DataSet.DataRow === undefined){    
                 //     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
