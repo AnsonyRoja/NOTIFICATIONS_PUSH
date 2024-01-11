@@ -60,6 +60,15 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     );
                 }
 
+                if(response.data.WindowTabData.RowCount === 2){
+
+                    await User.update(
+                        { documents: response?.data.WindowTabData.DataSet.DataRow },
+                        { where: { id: user.id, status: true } }
+                    );
+
+                }
+
                 const fieldArray = dataRow?.field;
 
                 if(fieldArray?.length === 18 && user.dataValues.notificacion === false){    
