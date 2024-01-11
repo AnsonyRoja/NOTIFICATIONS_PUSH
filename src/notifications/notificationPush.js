@@ -46,55 +46,62 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             });
 
-                // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
-                console.log("esto es la respuesta", response?.data);
-                console.log('esto es notificacion',user.dataValues.notificacion)
+            // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
+            console.log("esto es la respuesta", response?.data);
+            console.log('esto es notificacion', user.dataValues.notificacion)
 
-                const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
+            const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
-                if(response.data.WindowTabData.RowCount === 0){
+            if (dataRow) {
+                const dataArray = Object.values(dataRow);
+                console.log(dataArray);
 
-                    await User.update(
-                        { notificacion: false,
-                         documents: response?.data.WindowTabData.DataSet.DataRow
-                        },
-                        { where: { id: user.id} }
-                    );
-                }
+            }
 
-                if(response.data.WindowTabData.RowCount === 2){
+            if (response.data.WindowTabData.RowCount === 0) {
 
-                    await User.update(
-                        { documents: response?.data.WindowTabData.DataSet.DataRow },
-                        { where: { id: user.id, status: true } }
-                    );
+                await User.update(
+                    {
+                        notificacion: false,
+                        documents: response?.data.WindowTabData.DataSet.DataRow
+                    },
+                    { where: { id: user.id } }
+                );
+            }
 
-                }
+            if (response.data.WindowTabData.RowCount === 2) {
 
-                const fieldArray = dataRow?.field;
-
-                if(fieldArray?.length === 18 && user.dataValues.notificacion === false){    
-                    const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
-
-                    const numDocument = documentoUnico?.field[2].val;
-                    const operationType = documentoUnico?.field[15].val;
-
-                    sendPushNotification(numDocument, operationType, token);
-
-                    await User.update(
-                        { notificacion: true },
-                        { where: { id: user.id} }
-                    );
-
-
-                }
-
-            
-
-            if(user.dataValues.documents === undefined){
                 await User.update(
                     { documents: response?.data.WindowTabData.DataSet.DataRow },
-                    { where: { id: user.id} }
+                    { where: { id: user.id, status: true } }
+                );
+
+            }
+
+            const fieldArray = dataRow?.field;
+
+            if (fieldArray?.length === 18 && user.dataValues.notificacion === false) {
+                const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
+
+                const numDocument = documentoUnico?.field[2].val;
+                const operationType = documentoUnico?.field[15].val;
+
+                sendPushNotification(numDocument, operationType, token);
+
+                await User.update(
+                    { notificacion: true },
+                    { where: { id: user.id } }
+                );
+
+
+            }
+
+
+
+            if (user.dataValues.documents === undefined) {
+                await User.update(
+                    { documents: response?.data.WindowTabData.DataSet.DataRow },
+                    { where: { id: user.id } }
                 );
             }
 
@@ -103,7 +110,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 { where: { id: user.id, documents: null } }
             );
 
-       
+
 
 
 
@@ -123,7 +130,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, usersWithDocuments.documents.length, user.dataValues.documents.length);
 
-            if(currentDocuments.length < user.dataValues?.documents?.length){
+            if (currentDocuments.length < user.dataValues?.documents?.length) {
                 await User.update(
                     { documents: currentDocuments },
                     { where: { id: user.id, status: true } }
@@ -131,7 +138,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 await User.update(
                     { notificacion: false },
-                    { where: { id: user.id} }
+                    { where: { id: user.id } }
                 );
             }
 
@@ -157,7 +164,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                     await User.update(
                         { notificacion: false },
-                        { where: { id: user.id} }
+                        { where: { id: user.id } }
                     );
                 }
             } else {
@@ -174,7 +181,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 const listenToPushNotifications = async () => {
     try {
         const users = await User.findAll({
-            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'url', 'token', 'documents', 'status','notificacion'],
+            attributes: ['id', 'name', 'password', 'client_id', 'org_id', 'approle_id', 'warehouse_id', 'ad_language', 'url', 'token', 'documents', 'status', 'notificacion'],
             where: {
                 status: true
             }
