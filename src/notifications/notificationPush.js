@@ -49,9 +49,17 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
 
-                    
+                const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
+
+                if (dataRow === undefined || dataRow.field === undefined) {
+                    // Manejar el caso en el que DataRow o field son undefined
+                    console.error(`DataRow o field son undefined para ${user.dataValues.name}`);
+                    return;
+                }
                 
-                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && flag === false){    
+                const fieldArray = dataRow.field;
+
+                if(fieldArray.length === 18 && flag === false){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico.field[2].val;
