@@ -123,7 +123,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, usersWithDocuments.documents.length, user.dataValues.documents.length);
 
-            if(currentDocuments.length < user.dataValues.documents.length){
+            if(currentDocuments.length < user.dataValues?.documents?.length){
                 await User.update(
                     { documents: currentDocuments },
                     { where: { id: user.id, status: true } }
@@ -135,7 +135,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 );
             }
 
-            if (currentDocuments.length > user.dataValues.documents.length || currentDocuments.length === 1) {
+            if (currentDocuments.length > user.dataValues?.documents?.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
