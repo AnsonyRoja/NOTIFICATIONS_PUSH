@@ -47,7 +47,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             });
 
-                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
+                // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
 
                 if(response?.data.WindowTabData.DataSet.DataRow === undefined){
                     
@@ -65,7 +65,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     );
                     
                 }
-                
+
             }
 
             if(user.dataValues.documents === undefined){
