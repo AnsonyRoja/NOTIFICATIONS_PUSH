@@ -7,7 +7,6 @@ const Sequelize = require('sequelize');
 const agent = new https.Agent({
     rejectUnauthorized: false
 });
-let flag = false;
 
 const axiosInstance = axios.create({ httpsAgent: agent });
 
@@ -56,7 +55,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 
                 const fieldArray = dataRow?.field;
 
-                if(fieldArray?.length === 18 && flag === false){    
+                if(fieldArray?.length === 18 && user.dataValues.notificacion === false){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico?.field[2].val;
@@ -64,8 +63,12 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                     sendPushNotification(numDocument, operationType, token);
 
-                    
-                    flag = true;
+                    await User.update(
+                        { notificacion: true },
+                        { where: { id: user.id} }
+                    );
+
+
                 }
 
             
@@ -107,6 +110,11 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     { documents: currentDocuments },
                     { where: { id: user.id, status: true } }
                 );
+
+                await User.update(
+                    { notificacion: false },
+                    { where: { id: user.id} }
+                );
             }
 
             if (currentDocuments.length > usersWithDocuments.documents.length || currentDocuments.length === 1) {
@@ -127,6 +135,11 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     await User.update(
                         { documents: currentDocuments },
                         { where: { id: user.id, status: true } }
+                    );
+
+                    await User.update(
+                        { notificacion: false },
+                        { where: { id: user.id} }
                     );
                 }
             } else {
