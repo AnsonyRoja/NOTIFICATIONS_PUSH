@@ -52,11 +52,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
-            if (dataRow) {
-                const dataArray = Object.values(dataRow);
-                console.log(dataArray);
 
-            }
+
 
             if (response.data.WindowTabData.RowCount === 0) {
 
@@ -69,10 +66,12 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 );
             }
 
-            if (response.data.WindowTabData.RowCount === 2) {
+            if (response.data.WindowTabData.RowCount === 1) {
+                const dataArray = Object.values(dataRow);
+                console.log(dataArray);
 
                 await User.update(
-                    { documents: response?.data.WindowTabData.DataSet.DataRow },
+                    { documents: dataArray },
                     { where: { id: user.id, status: true } }
                 );
 
