@@ -47,7 +47,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             });
 
                 // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
-
+                console.log("esto es la respuesta", response?.data);
                 console.log('esto es notificacion',user.dataValues.notificacion)
 
                 const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
