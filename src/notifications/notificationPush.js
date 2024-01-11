@@ -47,10 +47,10 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             });
                 console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow);
-                if(response?.data.WindowTabData['@NumRows'] === 1){
+                // if(response?.data.WindowTabData['@NumRows'] === 1){
                 
-                    return;
-                }
+                //     return;
+                // }
 
             if(user.dataValues.documents === undefined){
                 await User.update(
