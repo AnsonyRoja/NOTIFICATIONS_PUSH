@@ -55,7 +55,9 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 if(response.data.WindowTabData.RowCount === 0){
 
                     await User.update(
-                        { notificacion: false },
+                        { notificacion: false,
+                         documents: response?.data.WindowTabData.DataSet.DataRow
+                        },
                         { where: { id: user.id} }
                     );
                 }
