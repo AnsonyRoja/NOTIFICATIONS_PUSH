@@ -46,17 +46,17 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
             });
-                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field[0].val);
-                if(response?.data.WindowTabData.DataSet.DataRow === undefined){    
-                    const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
+                console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow);
+                // if(response?.data.WindowTabData.DataSet.DataRow === undefined){    
+                //     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
-                    const numDocument = documentoUnico.field[2].val;
-                    const operationType = documentoUnico.field[15].val;
+                //     const numDocument = documentoUnico.field[2].val;
+                //     const operationType = documentoUnico.field[15].val;
 
-                    sendPushNotification(numDocument, operationType, token);
+                //     sendPushNotification(numDocument, operationType, token);
 
                     
-                }
+                // }
 
             if(user.dataValues.documents === undefined){
                 await User.update(
