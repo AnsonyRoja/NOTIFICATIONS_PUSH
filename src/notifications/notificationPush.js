@@ -46,7 +46,11 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
             });
-
+            
+                if(response?.data.WindowTabData.DataSet.DataRow.length === 0){
+                
+                    return;
+                }
 
             if(user.dataValues.documents === undefined){
                 await User.update(
@@ -54,7 +58,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     { where: { id: user.id} }
                 );
             }
-            
+
             await User.update(
                 { documents: response?.data.WindowTabData.DataSet.DataRow },
                 { where: { id: user.id, documents: null } }
