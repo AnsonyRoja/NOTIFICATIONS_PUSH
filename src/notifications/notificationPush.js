@@ -52,7 +52,14 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
 
-                
+                if(response.data.WindowTabData.RowCount === 0){
+
+                    await User.update(
+                        { notificacion: false },
+                        { where: { id: user.id} }
+                    );
+                }
+
                 const fieldArray = dataRow?.field;
 
                 if(fieldArray?.length === 18 && user.dataValues.notificacion === false){    
