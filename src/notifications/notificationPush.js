@@ -47,7 +47,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             });
                 console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow);
-                if(response?.data.WindowTabData.DataSet.DataRow.length === 0){
+                if(response?.data.WindowTabData['@NumRows'] === 1){
                 
                     return;
                 }
