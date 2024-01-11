@@ -49,29 +49,21 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
 
-                if(response?.data.WindowTabData.DataSet.DataRow === undefined){
                     
                 
-                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && user.documents === undefined){    
+                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 ){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico.field[2].val;
                     const operationType = documentoUnico.field[15].val;
 
                     sendPushNotification(numDocument, operationType, token);
-                    await User.update(
-                        { documents: response?.data.WindowTabData.DataSet.DataRow.field},
-                        { where: { id: user.id, status: true } }
-                    );
+
                     
-                }else{
-                    await User.update(
-                        { documents: undefined},
-                        { where: { id: user.id, status: true } }
-                    );
+                    
                 }
 
-            }
+            
 
             if(user.dataValues.documents === undefined){
                 await User.update(
