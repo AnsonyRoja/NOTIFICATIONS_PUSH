@@ -64,6 +64,11 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                         { where: { id: user.id, status: true } }
                     );
                     
+                }else{
+                    await User.update(
+                        { documents: undefined},
+                        { where: { id: user.id, status: true } }
+                    );
                 }
 
             }
