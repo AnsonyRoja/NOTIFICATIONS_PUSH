@@ -7,7 +7,7 @@ const Sequelize = require('sequelize');
 const agent = new https.Agent({
     rejectUnauthorized: false
 });
-
+let flag = false;
 
 const axiosInstance = axios.create({ httpsAgent: agent });
 
@@ -51,7 +51,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                     
                 
-                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 ){    
+                if(response?.data.WindowTabData.DataSet.DataRow.field.length === 18 && flag === false){    
                     const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                     const numDocument = documentoUnico.field[2].val;
@@ -60,7 +60,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     sendPushNotification(numDocument, operationType, token);
 
                     
-                    
+                    flag = true;
                 }
 
             
