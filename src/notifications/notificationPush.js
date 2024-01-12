@@ -142,15 +142,14 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     { notificacion: false },
                     { where: { id: user.id } }
                 );
-                
+
             }
 
             if (dataArray.length > user.dataValues?.documents?.length) {
 
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
-
-
+                console.log('Documentos actuales:', currentDocuments);
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
                     const docExistente = usersWithDocuments?.documents[index];
