@@ -111,15 +111,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
 
-            const usersWithDocuments = await User.findOne({
-                attributes: ['id', 'documents'],
-                where: {
-                    id: user.id,
-                    documents: {
-                        [Sequelize.Op.not]: null
-                    }
-                }
-            });
+
 
 
 
@@ -127,7 +119,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
 
-            console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, usersWithDocuments.documents.length, user.dataValues.documents.length);
+            console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, user.dataValues.documents.length);
 
             if (currentDocuments.length < user.dataValues?.documents?.length) {
                 await User.update(
@@ -154,7 +146,15 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 }
 
-
+                const usersWithDocuments = await User.findOne({
+                    attributes: ['id', 'documents'],
+                    where: {
+                        id: user.id,
+                        documents: {
+                            [Sequelize.Op.not]: null
+                        }
+                    }
+                });
 
 
 
