@@ -83,8 +83,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 );
             }
 
-           
-           
 
 
             await User.update(
