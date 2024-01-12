@@ -134,7 +134,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             if (dataArray.length < user.dataValues?.documents?.length) {
                 await User.update(
-                    { documents: currentDocuments },
+                    { documents: dataArray },
                     { where: { id: user.id, status: true } }
                 );
 
@@ -165,7 +165,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     sendPushNotification(numDocument, operationType, token);
 
                     await User.update(
-                        { documents: currentDocuments },
+                        { documents: dataArray },
                         { where: { id: user.id, status: true } }
                     );
 
