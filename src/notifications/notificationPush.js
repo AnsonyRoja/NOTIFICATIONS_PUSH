@@ -134,7 +134,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             if (dataArray.length < user.dataValues?.documents?.length) {
                 await User.update(
-                    { documents: dataArray },
+                    { documents: currentDocuments },
                     { where: { id: user.id, status: true } }
                 );
 
@@ -142,16 +142,18 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     { notificacion: false },
                     { where: { id: user.id } }
                 );
+                
             }
 
             if (dataArray.length > user.dataValues?.documents?.length) {
+
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
 
 
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
-                    const docExistente = usersWithDocuments?.documents[0][index];
+                    const docExistente = usersWithDocuments?.documents[index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
 
@@ -165,7 +167,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     sendPushNotification(numDocument, operationType, token);
 
                     await User.update(
-                        { documents: dataArray },
+                        { documents: currentDocuments },
                         { where: { id: user.id, status: true } }
                     );
 
