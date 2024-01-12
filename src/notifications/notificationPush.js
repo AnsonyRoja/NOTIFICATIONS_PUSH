@@ -151,7 +151,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
-                    const docExistente = usersWithDocuments?.documents[index];
+                    const docExistente = usersWithDocuments?.documents[0][index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
 
