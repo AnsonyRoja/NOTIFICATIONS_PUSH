@@ -3,11 +3,16 @@ const https = require('https');
 const sendPushNotification = require('./sendNotification');
 const { User } = require('../DB_connection');
 const Sequelize = require('sequelize');
+const isEqual = require('lodash/isEqual');
+
 
 const agent = new https.Agent({
     rejectUnauthorized: false
 });
 
+
+let flag = false;
+let docTwo = false;
 const axiosInstance = axios.create({ httpsAgent: agent });
 
 const checkAndNotifyDocumentsForUser = async (user) => {
@@ -19,6 +24,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
     for (let retry = 0; retry < MAX_RETRIES; retry++) {
         try {
+            
+     
             const response = await axiosInstance.post(`${user.dataValues.url}ADInterface/services/rest/model_adservice/query_data`, {
 
 
@@ -47,111 +54,109 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             });
 
             // console.log("esta es la respuesta",response?.data.WindowTabData.DataSet.DataRow.field.length, user.documents);
-            console.log("esto es la respuesta", response?.data);
-            console.log('esto es notificacion', user.dataValues.notificacion)
+            // console.log("esto es la respuesta", response?.data);
+            // console.log('esto es notificacion', user.dataValues.notificacion)
+            if(response?.data?.WindowTabData?.RowCount === 0){
 
-            const dataRow = response?.data?.WindowTabData?.DataSet?.DataRow;
-
-
-
-
-            if (response.data.WindowTabData.RowCount === 0) {
-
+                flag = false;
                 await User.update(
-                    {
-                        notificacion: false,
-                        documents: response?.data.WindowTabData.DataSet.DataRow
-                    },
+                    { notificacion: false },
                     { where: { id: user.id } }
                 );
+                docTwo = false;
+
             }
-            const dataArray = Object.values(dataRow);
+            
+            const dataRow = response?.data.WindowTabData.DataSet.DataRow;
+            if(dataRow === undefined) return;
+            let array = Array.isArray(dataRow) ? dataRow : [dataRow]; // Convierte en array si no lo es
 
-            if (response.data.WindowTabData.RowCount === 1) {
-                
-                console.log(dataArray);
 
+                console.log("esto es el array",array);
+           
+
+            if(response?.data?.WindowTabData?.RowCount === 1){
+                docTwo = false ;
+                flag = true;
                 await User.update(
-                    { documents: dataArray },
+                    { documents: array },
                     { where: { id: user.id, status: true } }
                 );
-
             }
 
-            const fieldArray = dataRow?.field;
+            if(response?.data?.WindowTabData?.RowCount === 3){
+                docTwo = true;
+                flag = true;
+            }
+           
+           
 
-            
 
-            if (fieldArray?.length === 18 && user?.dataValues?.notificacion === false) {
-                const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
+            await User.update(
+                { documents: response?.data.WindowTabData.DataSet.DataRow },
+                { where: { id: user.id, documents:null } }
+            );
 
-                const numDocument = documentoUnico?.field[2].val;
-                const operationType = documentoUnico?.field[15].val;
+              
+            const usersWithDocuments = await User.findOne({
+                attributes: ['id', 'documents'],
+                where: {
+                    id: user.id,
+                    documents: {
+                        [Sequelize.Op.not]: null
+                    }
+                }
+            });
 
-                sendPushNotification(numDocument, operationType, token);
+
+            console.log( "esto es userwithDocuments ", usersWithDocuments?.documents);
+
+          
+
+            // if (array === undefined) return;
+
+            console.log("Estos son los documentosss", user.dataValues.id, array.length, usersWithDocuments?.documents?.length);
+
+            if(array.length === 1  &&  user?.dataValues?.notificacion === false && flag === false){
 
                 await User.update(
                     { notificacion: true },
                     { where: { id: user.id } }
                 );
+                const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
+                const numDocument = documentoUnico?.field[2].val;
+                const operationType = documentoUnico?.field[15].val;
+
+                sendPushNotification(numDocument, operationType, token);
+
+                flag = true;
+           
 
 
             }
 
 
-            if (user.dataValues.documents === undefined) {
+            if (array.length < usersWithDocuments?.documents?.length) {
                 await User.update(
-                    { documents: response?.data.WindowTabData.DataSet.DataRow },
-                    { where: { id: user.id } }
-                );
-            }
-
-            await User.update(
-                { documents: response?.data.WindowTabData.DataSet.DataRow },
-                { where: { id: user.id, documents: null } }
-            );
-
-
-
-                const usersWithDocuments = await User.findOne({
-                    attributes: ['id', 'documents'],
-                    where: {
-                        id: user.id,
-                        documents: {
-                            [Sequelize.Op.not]: null
-                        }
-                    }
-                });
-
-
-
-
-
-            const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
-            if (currentDocuments === undefined) return;
-
-            console.log("Estos son los documentosss", user.dataValues.id, dataArray.length, user.dataValues.documents.length);
-
-            if (dataArray.length < user.dataValues?.documents?.length) {
-                await User.update(
-                    { documents: currentDocuments },
+                    { documents: array },
                     { where: { id: user.id, status: true } }
                 );
 
-                await User.update(
-                    { notificacion: false },
-                    { where: { id: user.id } }
-                );
+       
 
-            }
+            }   
 
-            if (dataArray.length > user.dataValues?.documents?.length) {
+
+            console.log("esto es userwithdocuments ",usersWithDocuments?.documents);
+            if (array.length > usersWithDocuments?.documents?.length) {
 
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
-                console.log('Documentos actuales:', currentDocuments);
+                console.log('Documentos actuales:', array);
 
-                const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
+                flag = false;
+
+                const nuevoIndice = array.findIndex((currentDoc, index) => {
                     const docExistente = usersWithDocuments?.documents[index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
@@ -159,31 +164,28 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
                 if (nuevoIndice !== -1) {
-                    console.log('Documento Nuevo:', currentDocuments[nuevoIndice].field[2].val);
-                    const numDocument = currentDocuments[nuevoIndice].field[2].val;
-                    const operationType = currentDocuments[nuevoIndice].field[15].val;
+                    console.log('Documento Nuevo:', array[nuevoIndice].field[2].val);
+                    const numDocument = array[nuevoIndice].field[2].val;
+                    const operationType = array[nuevoIndice].field[15].val;
                     console.log('Tipo de Operacion:', operationType);
                     sendPushNotification(numDocument, operationType, token);
 
                     await User.update(
-                        { documents: currentDocuments },
+                        { documents: array },
                         { where: { id: user.id, status: true } }
                     );
 
-                    await User.update(
-                        { notificacion: false },
-                        { where: { id: user.id } }
-                    );
+                
                 }
             } else {
                 console.log("no hay cambios en los documentos");
             }
 
-            break; // Sale del bucle de reintento si la solicitud es exitosa
         } catch (error) {
-            console.error(`Error en la solicitud para ${user.dataValues.name} (Intento ${retry + 1}):`, error.message);
-        }
+            console.error(`Error al obtener documentos para el usuario ${user.dataValues.name}:`, error);            
+        };
     }
+    
 };
 
 const listenToPushNotifications = async () => {
@@ -212,7 +214,7 @@ const listenToPushNotifications = async () => {
         console.error('Error al obtener documentos:', error);
     } finally {
         // Llamada recursiva después de 5 segundos
-        setTimeout(listenToPushNotifications, 5000);
+        setTimeout(listenToPushNotifications, 10000);
     }
 };
 
