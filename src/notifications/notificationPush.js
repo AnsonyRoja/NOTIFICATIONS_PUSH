@@ -79,7 +79,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
             const fieldArray = dataRow?.field;
 
-            if (fieldArray?.length === 18 && user.dataValues.notificacion === false) {
+            if (fieldArray?.length === 18 && user?.dataValues?.notificacion === false) {
                 const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
 
                 const numDocument = documentoUnico?.field[2].val;
@@ -111,6 +111,15 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
 
+                const usersWithDocuments = await User.findOne({
+                    attributes: ['id', 'documents'],
+                    where: {
+                        id: user.id,
+                        documents: {
+                            [Sequelize.Op.not]: null
+                        }
+                    }
+                });
 
 
 
@@ -136,26 +145,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             if (currentDocuments.length > user.dataValues?.documents?.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
-                if (user.dataValues?.documents?.length === 1) {
-
-                    await User.update(
-                        { documents: currentDocuments },
-                        { where: { id: user.id, status: true } }
-                    );
-
-
-                }
-
-                const usersWithDocuments = await User.findOne({
-                    attributes: ['id', 'documents'],
-                    where: {
-                        id: user.id,
-                        documents: {
-                            [Sequelize.Op.not]: null
-                        }
-                    }
-                });
-
 
 
 
@@ -163,8 +152,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     const docExistente = usersWithDocuments?.documents[index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
-
-
 
 
 
