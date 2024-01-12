@@ -65,9 +65,10 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                     { where: { id: user.id } }
                 );
             }
+            const dataArray = Object.values(dataRow);
 
             if (response.data.WindowTabData.RowCount === 1) {
-                const dataArray = Object.values(dataRow);
+                
                 console.log(dataArray);
 
                 await User.update(
@@ -78,6 +79,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             }
 
             const fieldArray = dataRow?.field;
+
+            
 
             if (fieldArray?.length === 18 && user?.dataValues?.notificacion === false) {
                 const documentoUnico = response?.data.WindowTabData.DataSet.DataRow;
@@ -94,7 +97,6 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
             }
-
 
 
             if (user.dataValues.documents === undefined) {
@@ -128,9 +130,9 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
 
-            console.log("Estos son los documentosss", user.dataValues.id, currentDocuments.length, user.dataValues.documents.length);
+            console.log("Estos son los documentosss", user.dataValues.id, dataArray.length, user.dataValues.documents.length);
 
-            if (currentDocuments.length < user.dataValues?.documents?.length) {
+            if (dataArray.length < user.dataValues?.documents?.length) {
                 await User.update(
                     { documents: currentDocuments },
                     { where: { id: user.id, status: true } }
@@ -142,7 +144,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                 );
             }
 
-            if (currentDocuments.length > user.dataValues?.documents?.length) {
+            if (dataArray.length > user.dataValues?.documents?.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
 
