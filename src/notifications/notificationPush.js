@@ -114,15 +114,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
 
-            const usersWithDocuments = await User.findOne({
-                attributes: ['id', 'documents'],
-                where: {
-                    id: user.id,
-                    documents: {
-                        [Sequelize.Op.not]: null
-                    }
-                }
-            });
+
 
             const currentDocuments = response?.data.WindowTabData.DataSet.DataRow;
             if (currentDocuments === undefined) return;
@@ -144,10 +136,37 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             if (currentDocuments.length > user.dataValues?.documents?.length) {
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
+                if (user.dataValues?.documents?.length === 1) {
+
+                    await User.update(
+                        { documents: currentDocuments },
+                        { where: { id: user.id, status: true } }
+                    );
+
+
+                }
+
+                const usersWithDocuments = await User.findOne({
+                    attributes: ['id', 'documents'],
+                    where: {
+                        id: user.id,
+                        documents: {
+                            [Sequelize.Op.not]: null
+                        }
+                    }
+                });
+
+
+
+
                 const nuevoIndice = currentDocuments.findIndex((currentDoc, index) => {
                     const docExistente = usersWithDocuments?.documents[index];
                     return !docExistente || docExistente.field[0].val !== currentDoc.field[0].val;
                 });
+
+
+
+
 
                 if (nuevoIndice !== -1) {
                     console.log('Documento Nuevo:', currentDocuments[nuevoIndice].field[2].val);
