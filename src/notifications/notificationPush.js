@@ -111,7 +111,15 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
 
 
-
+            const usersWithDocuments = await User.findOne({
+                attributes: ['id', 'documents'],
+                where: {
+                    id: user.id,
+                    documents: {
+                        [Sequelize.Op.not]: null
+                    }
+                }
+            });
 
 
 
@@ -146,15 +154,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 }
 
-                const usersWithDocuments = await User.findOne({
-                    attributes: ['id', 'documents'],
-                    where: {
-                        id: user.id,
-                        documents: {
-                            [Sequelize.Op.not]: null
-                        }
-                    }
-                });
+
 
 
 
