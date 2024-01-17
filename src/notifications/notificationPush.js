@@ -140,7 +140,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             }   
 
 
-            console.log("esto es userwithdocuments ",usersWithDocuments?.documents);
+            // console.log("esto es userwithdocuments ",usersWithDocuments?.documents);
             if (array.length > usersWithDocuments?.documents?.length) {
 
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
