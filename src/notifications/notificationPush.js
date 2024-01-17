@@ -145,7 +145,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
 
                 console.log(`¡Hubo un cambio en los documentos para ${user.dataValues.name}! La cantidad de documentos ha cambiado.`);
 
-                console.log('Documentos actuales:', array);
+                // console.log('Documentos actuales:', array);
 
                 flag = false;
 
