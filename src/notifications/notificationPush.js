@@ -72,7 +72,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             let array = Array.isArray(dataRow) ? dataRow : [dataRow]; // Convierte en array si no lo es
 
 
-                console.log("esto es el array",array);
+                // console.log("esto es el array",array);
            
 
             if(response?.data?.WindowTabData?.RowCount === 1){
