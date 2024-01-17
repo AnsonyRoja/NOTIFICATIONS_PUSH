@@ -102,7 +102,7 @@ const checkAndNotifyDocumentsForUser = async (user) => {
             });
 
 
-            console.log( "esto es userwithDocuments ", usersWithDocuments?.documents);
+            // console.log( "esto es userwithDocuments ", usersWithDocuments?.documents);
 
           
 
