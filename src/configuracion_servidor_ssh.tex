@@ -1,0 +1,20 @@
+npm install -g pm2
+
+
+npm install
+
+
+// pone en marcha el servidor
+pm2 start src/index.js --name NOTIFICATIONS_PUSH
+
+
+// para que se inicie al arrancar el servidor
+pm2 save
+
+
+pm2 startup
+
+// me sirve para ver la respuesta que esta obteniendo el servidor 
+
+pm2 logs NOTIFICATIONS_PUSH 
+
