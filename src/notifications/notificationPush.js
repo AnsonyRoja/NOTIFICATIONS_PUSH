@@ -34,7 +34,8 @@ const checkAndNotifyDocumentsForUser = async (user) => {
                         "serviceType": "getDocuments",
                         "DataRow": {
                             "field": [
-                                { "@column": "Supervisor_ID", "val": user.dataValues.id }
+                                {"@column": "Supervisor_ID", "val": user.dataValues.id},
+                                {"@column": "AD_Org_ID", "val": user.dataValues.org_id}
                             ]
                         }
                     },
